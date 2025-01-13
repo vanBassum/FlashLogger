@@ -10,13 +10,14 @@ public:
     struct Config
     {
         uint8_t keySize = 0;
+        uint8_t valueSize = 0;
     };
 
     struct Header
     {
         uint32_t signature = 0;
         Config config;
-        uint8_t padding[3] = { 0xFF, 0xFF, 0xFF };
+        uint8_t padding[2] = { 0 };
     };
 
 private:
@@ -90,7 +91,7 @@ public:
 
     bool getConfig(Config& config)
     {
-        config.keySize = 2;
+        config = _header.config;
         return true;
     }
 
