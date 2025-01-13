@@ -15,13 +15,14 @@ namespace LoggerTests
         static constexpr size_t SECTOR_SIZE = 64; 
         static constexpr uint32_t SIGNATURE = 0x16FC69AE;
         static constexpr size_t HEADER_SIZE = 8;
-        static constexpr MyLogger::Config CONFIG = { 2 };
+        static constexpr MyLogger::Config CONFIG = { 2, 5 };
 
         static constexpr uint8_t primeData[FLASH_SIZE] =
         {
             UINT32_TO_BYTES(SIGNATURE),
             CONFIG.keySize,
-            0, 0, 0,                    // reserved
+            CONFIG.valueSize,
+            0, 0,                    // reserved
             0xAA, 0xBB, 0xCC, 0xDD      // some random data
         };
 
@@ -47,6 +48,14 @@ namespace LoggerTests
             Assert::IsTrue(logger.init(flashStorage));
             Assert::IsTrue(logger.getConfig(loadedConfig));
             Assert::AreEqual(CONFIG.keySize, loadedConfig.keySize);
+        }
+
+        TEST_METHOD(Init_ShouldLoadCorrectValueSize)
+        {
+            MyLogger::Config loadedConfig;
+            Assert::IsTrue(logger.init(flashStorage));
+            Assert::IsTrue(logger.getConfig(loadedConfig));
+            Assert::AreEqual(CONFIG.valueSize, loadedConfig.valueSize);
         }
 
         TEST_METHOD(FormatAndInit_ShouldClearDataBeyondHeader)

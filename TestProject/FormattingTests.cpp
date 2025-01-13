@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../FlashLogger/MyLogger.h"
 #include "MockFlashStorage.h"
+#include "Macros.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -16,7 +17,7 @@ namespace LoggerTests
         static constexpr size_t SECTOR_SIZE = 64;
         static constexpr uint32_t SIGNATURE = 0x16FC69AE;
         static constexpr size_t HEADER_SIZE = 8;
-        static constexpr MyLogger::Config CONFIG = { 2 };
+        static constexpr MyLogger::Config CONFIG = { 2, 5 };
 
         MockFlashStorage flashStorage;
         MyLogger logger;
@@ -62,10 +63,3 @@ namespace LoggerTests
         }
     };
 }
-
-
-
-
-
-// Boundary Tests for Flash Storage: Assert::IsTrue(smallFlashStorage.init(4, 1)); // Very small flash size
-// Flash Storage Write Failures (crc?)

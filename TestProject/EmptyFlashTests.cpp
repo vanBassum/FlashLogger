@@ -17,7 +17,7 @@ namespace LoggerTests
         static constexpr uint32_t SIGNATURE = 0x16FC69AE;
         static constexpr uint8_t CORRUPTED_HEADER[4] = { 0x12, 0x24, 0x56, 0x78 };
         static constexpr uint8_t PARTIAL_HEADER[2] = { 0xAE, 0x69 };
-        static constexpr MyLogger::Config CONFIG = { 2 };
+        static constexpr MyLogger::Config CONFIG = { 2, 5 };
 
         MockFlashStorage flashStorage;
         MyLogger logger;
