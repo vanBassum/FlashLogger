@@ -107,6 +107,8 @@ public:
     }
 
     size_t getNumSectors() const override {
+        if (totalSize == 0)
+            return 0;
         return totalSize / sectorSize;
     }
 };

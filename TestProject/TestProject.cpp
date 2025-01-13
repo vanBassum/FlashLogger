@@ -49,6 +49,12 @@ namespace LoggerTests
             MyLogger logger;
 
             Assert::IsFalse(logger.formatAndInit(flashStorage));
+
+            // In order to make this pass, we have to implement
         }
+
+
+        // Next test case, initialize from loaded flash
+
     };
 }
