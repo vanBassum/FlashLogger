@@ -98,6 +98,19 @@ public:
         return true;
     }
 
+    bool eraseAll() {
+        if (!initialized)
+        {
+            printf("Error: Not initialized\n");
+            return false;
+        }
+
+        // Erase by setting all bits in the sector to 1 (0xFF)
+        std::memset(storage, 0xFF, totalSize);
+        return true;
+    }
+
+
     size_t getTotalSize() const override {
         return totalSize;
     }
