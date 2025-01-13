@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+.vs
+FlashLogger/x64
+TestProject/x64
+x64
