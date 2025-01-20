@@ -4,11 +4,18 @@
 
 
 
-
 class MyLogger {
+public:
+    struct Config
+    {
+        uint8_t keySize = 0;
+        uint8_t valueSize = 0;
+    };
 private:
     constexpr static const uint32_t SIGNATURE = 0x16FC69AE;
     IFlashStorage* _flash = nullptr;
+    bool _initialized = false;
+    Config _config;
 
     bool clearFlash()
     {
@@ -27,6 +34,7 @@ private:
     struct Header
     {
         uint32_t signature = 0;
+        Config config;
     };
 
 
@@ -73,19 +81,22 @@ public:
         if (!verifyHeaderSignature(&header))
             return false;
 
+        memcpy(&_config, &header.config, sizeof(_config));
+
+        _initialized = true;
         return true;
     }
 
     bool attachStorage(IFlashStorage* flash)
     {
-        if (_flash)
+        if (_initialized)
             return false;
 
         _flash = flash;
         return true;
     }
 
-    bool format()
+    bool format(const Config& config)
     {
         Header header;
 
@@ -96,10 +107,21 @@ public:
             return false;
 
         header.signature = SIGNATURE;
-
+        memcpy(&header.config, &config, sizeof(_config));
+        
         if (!writeHeader(&header))
             return false;
 
+        _initialized = false;
+
+        return true;
+    }
+
+    bool getConfig(Config* config)
+    {
+        if (!_initialized)
+            return false;
+        memcpy(config, &_config, sizeof(_config));
         return true;
     }
 };
