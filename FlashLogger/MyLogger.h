@@ -24,20 +24,53 @@ private:
         return true;
     }
 
+    struct Header
+    {
+        uint32_t signature = 0;
+    };
+
+
+    bool writeHeader(const Header* header)
+    {
+        if (!_flash)
+            return false;
+
+        if (!_flash->write(0, header, sizeof(Header)))
+            return false;
+
+        return true;
+    }
+
+    bool readHeader(Header* header)
+    {
+        if (!_flash)
+            return false;
+
+        if (!_flash->read(0, header, sizeof(Header)))
+            return false;
+
+        return true;
+    }
+
+    bool verifyHeaderSignature(Header* header)
+    {
+        return header->signature == SIGNATURE;
+    }
+
 public:
 
     MyLogger() = default; // Default constructor
 
     bool init() {
+        Header header;
 
         if (!_flash)
             return false;
 
-        uint32_t signature;
-        if (!_flash->read(0, &signature, 4))
+        if (!readHeader(&header))
             return false;
 
-        if (signature != SIGNATURE)
+        if (!verifyHeaderSignature(&header))
             return false;
 
         return true;
@@ -54,16 +87,19 @@ public:
 
     bool format()
     {
+        Header header;
+
         if (!_flash)
             return false;
 
         if (!clearFlash())
             return false;
 
-        if (!_flash->write(0, &SIGNATURE, 4))
+        header.signature = SIGNATURE;
+
+        if (!writeHeader(&header))
             return false;
 
         return true;
     }
-
 };
