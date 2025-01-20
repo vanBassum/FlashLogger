@@ -7,14 +7,15 @@
 
 class MockFlashStorage : public IFlashStorage {
 private:
-    static constexpr size_t MaxTotalSize = 1024 * 1024; // Example: 1 MiB max size
-    uint8_t storage[MaxTotalSize]{};  // Statically allocated memory for flash storage
     size_t totalSize = 0;
     size_t sectorSize = 0;
     bool initialized = false;
 
 public:
-    MockFlashStorage() = default; // Default constructor
+    static constexpr size_t MaxTotalSize = 1024 * 1024;
+    uint8_t storage[MaxTotalSize] = { 0 };
+
+    MockFlashStorage() = default; 
 
     bool init(size_t totalSize, size_t sectorSize) {
         if (totalSize > MaxTotalSize) {
@@ -28,9 +29,6 @@ public:
 
         this->totalSize = totalSize;
         this->sectorSize = sectorSize;
-
-        // Optionally, clear the storage to simulate freshly erased flash
-        //std::memset(storage, 0xFF, MaxTotalSize);
 
         initialized = true;
         return true;

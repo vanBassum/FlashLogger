@@ -156,15 +156,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FormattingTests.cpp" />
-    <ClCompile Include="LoadedFlashTests.cpp" />
+    <ClCompile Include="FormatTests.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="EmptyFlashTests.cpp" />
+    <ClCompile Include="InitialisationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros.h" />

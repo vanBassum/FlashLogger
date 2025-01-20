@@ -15,16 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EmptyFlashTests.cpp">
+    <ClCompile Include="InitialisationTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoadedFlashTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FormattingTests.cpp">
+    <ClCompile Include="FormatTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
