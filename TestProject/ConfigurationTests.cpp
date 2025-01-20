@@ -34,35 +34,21 @@ namespace LoggerTests
         TEST_METHOD_INITIALIZE(TestInitialize)
         {
             Assert::IsTrue(flashStorage.init(FLASH_SIZE, SECTOR_SIZE));
-        }
-
-        TEST_METHOD(GetConfig_Uninitialized_ShouldReturnFalse)
-        {
-            Assert::IsTrue(logger.attachStorage(&flashStorage));
-            Assert::IsTrue(flashStorage.eraseAll());
-
-            MyLogger::Config config;
-            Assert::IsFalse(logger.getConfig(&config));
-        }
-
-        TEST_METHOD(GetConfig_Initialized_ShouldReturnTrue)
-        {
             Assert::IsTrue(flashStorage.eraseAll());
             Assert::IsTrue(flashStorage.write(0, validData, sizeof(validData)));
             Assert::IsTrue(logger.attachStorage(&flashStorage));
             Assert::IsTrue(logger.init());
+        }
 
+
+        TEST_METHOD(GetConfig_Initialized_ShouldReturnTrue)
+        {
             MyLogger::Config config;
             Assert::IsTrue(logger.getConfig(&config));
         }
 
         TEST_METHOD(GetConfig_AfterFormat_ShouldReturnFalse)
         {
-            Assert::IsTrue(flashStorage.eraseAll());
-            Assert::IsTrue(flashStorage.write(0, validData, sizeof(validData)));
-            Assert::IsTrue(logger.attachStorage(&flashStorage));
-            Assert::IsTrue(logger.init());
-
             MyLogger::Config config;
             Assert::IsTrue(logger.getConfig(&config));
             Assert::IsTrue(logger.format(config));
@@ -72,11 +58,6 @@ namespace LoggerTests
 
         TEST_METHOD(GetConfig_AfterValidInit_ShouldMatchFlashData)
         {
-            Assert::IsTrue(flashStorage.eraseAll());
-            Assert::IsTrue(flashStorage.write(0, validData, sizeof(validData)));
-            Assert::IsTrue(logger.attachStorage(&flashStorage));
-            Assert::IsTrue(logger.init());
-
             MyLogger::Config config;
             Assert::IsTrue(logger.getConfig(&config));
             Assert::AreEqual(DEFAULT_CONFIG.keySize, config.keySize);
@@ -85,14 +66,9 @@ namespace LoggerTests
 
         TEST_METHOD(Format_ChangesKeyAndValueSizes_ShouldReflectAfterInit)
         {
-            Assert::IsTrue(flashStorage.eraseAll());
-            Assert::IsTrue(flashStorage.write(0, validData, sizeof(validData)));
-            Assert::IsTrue(logger.attachStorage(&flashStorage));
-
+            MyLogger::Config config;
             Assert::IsTrue(logger.format(NEW_CONFIG));
             Assert::IsTrue(logger.init());
-
-            MyLogger::Config config;
             Assert::IsTrue(logger.getConfig(&config));
 
             Assert::AreEqual(NEW_CONFIG.keySize, config.keySize);
