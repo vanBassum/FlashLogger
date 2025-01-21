@@ -15,7 +15,7 @@ namespace LoggerTests
         static constexpr size_t SECTOR_SIZE = 64;
         static constexpr uint32_t VALID_SIGNATURE = 0x16FC69AE;
         static constexpr uint32_t INVALID_SIGNATURE = 0x15613843;
-        static constexpr MyLogger::Config DEFAULT_CONFIG = { 1, 8 };
+        static constexpr MyLoggerConfig DEFAULT_CONFIG = { 1, 8 };
 
         // Test data for various scenarios
         static constexpr uint8_t validData[] = {

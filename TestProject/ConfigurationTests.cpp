@@ -14,10 +14,9 @@ namespace LoggerTests
         static constexpr size_t FLASH_SIZE = 1024;
         static constexpr size_t SECTOR_SIZE = 64;
         static constexpr uint32_t VALID_SIGNATURE = 0x16FC69AE;
-        static constexpr MyLogger::Config DEFAULT_CONFIG = { 1, 8 };
-        static constexpr MyLogger::Config NEW_CONFIG = { 2, 5 };
+        static constexpr MyLoggerConfig DEFAULT_CONFIG = { 1, 8 };
+        static constexpr MyLoggerConfig NEW_CONFIG = { 2, 5 };
 
-        // Test data for various scenarios
         static constexpr uint8_t validData[] = {
             UINT32_TO_BYTES(VALID_SIGNATURE),
             DEFAULT_CONFIG.keySize,
@@ -43,13 +42,13 @@ namespace LoggerTests
 
         TEST_METHOD(GetConfig_Initialized_ShouldReturnTrue)
         {
-            MyLogger::Config config;
+            MyLoggerConfig config;
             Assert::IsTrue(logger.getConfig(&config));
         }
 
         TEST_METHOD(GetConfig_AfterFormat_ShouldReturnFalse)
         {
-            MyLogger::Config config;
+            MyLoggerConfig config;
             Assert::IsTrue(logger.getConfig(&config));
             Assert::IsTrue(logger.format(config));
             Assert::IsFalse(logger.getConfig(&config));
@@ -58,7 +57,7 @@ namespace LoggerTests
 
         TEST_METHOD(GetConfig_AfterValidInit_ShouldMatchFlashData)
         {
-            MyLogger::Config config;
+            MyLoggerConfig config;
             Assert::IsTrue(logger.getConfig(&config));
             Assert::AreEqual(DEFAULT_CONFIG.keySize, config.keySize);
             Assert::AreEqual(DEFAULT_CONFIG.valueSize, config.valueSize);
@@ -66,7 +65,7 @@ namespace LoggerTests
 
         TEST_METHOD(Format_ChangesKeyAndValueSizes_ShouldReflectAfterInit)
         {
-            MyLogger::Config config;
+            MyLoggerConfig config;
             Assert::IsTrue(logger.format(NEW_CONFIG));
             Assert::IsTrue(logger.init());
             Assert::IsTrue(logger.getConfig(&config));
@@ -75,5 +74,10 @@ namespace LoggerTests
             Assert::AreEqual(NEW_CONFIG.valueSize, config.valueSize);
         }
 
+        TEST_METHOD(Format_WithInvalidConfig_ShouldReturnFalse)
+        {
+            MyLoggerConfig invalidCfg{ 0, 0 };
+            Assert::IsFalse(logger.format(invalidCfg));
+        }
     };
 }

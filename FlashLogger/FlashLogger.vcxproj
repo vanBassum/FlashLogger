@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IFlashStorage.h" />
+    <ClInclude Include="LogEntry.h" />
     <ClInclude Include="MyLogger.h" />
   </ItemGroup>
   <ItemGroup>

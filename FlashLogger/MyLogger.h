@@ -1,21 +1,40 @@
 #pragma once
 #include "../FlashLogger/IFlashStorage.h"
 #include <cstdio> // For printf
+#include "LogEntry.h"
 
+struct MyLoggerConfig
+{
+    uint8_t keySize = 0;
+    uint8_t valueSize = 0;
+};
+
+
+struct MyLoggerHeader
+{
+    uint32_t signature = 0;
+    MyLoggerConfig config;
+};
+
+class LogPosition {
+    int32_t _value = -1;
+public:
+    int32_t getValue() const { return _value; }
+    static LogPosition Invalid() { return LogPosition(); }
+};
 
 
 class MyLogger {
 public:
-    struct Config
-    {
-        uint8_t keySize = 0;
-        uint8_t valueSize = 0;
-    };
+
 private:
     constexpr static const uint32_t SIGNATURE = 0x16FC69AE;
+    constexpr static const uint8_t MAX_KEY_SIZE = 4;
+    constexpr static const uint8_t MAX_VALUE_SIZE = 32;
+
     IFlashStorage* _flash = nullptr;
     bool _initialized = false;
-    Config _config;
+    MyLoggerConfig _config;
 
     bool clearFlash()
     {
@@ -31,36 +50,30 @@ private:
         return true;
     }
 
-    struct Header
-    {
-        uint32_t signature = 0;
-        Config config;
-    };
 
-
-    bool writeHeader(const Header* header)
+    bool writeHeader(const MyLoggerHeader* header)
     {
         if (!_flash)
             return false;
 
-        if (!_flash->write(0, header, sizeof(Header)))
+        if (!_flash->write(0, header, sizeof(MyLoggerHeader)))
             return false;
 
         return true;
     }
 
-    bool readHeader(Header* header)
+    bool readHeader(MyLoggerHeader* header)
     {
         if (!_flash)
             return false;
 
-        if (!_flash->read(0, header, sizeof(Header)))
+        if (!_flash->read(0, header, sizeof(MyLoggerHeader)))
             return false;
 
         return true;
     }
 
-    bool verifyHeaderSignature(Header* header)
+    bool verifyHeaderSignature(MyLoggerHeader* header)
     {
         return header->signature == SIGNATURE;
     }
@@ -70,7 +83,7 @@ public:
     MyLogger() = default; // Default constructor
 
     bool init() {
-        Header header;
+        MyLoggerHeader header;
 
         if (!_flash)
             return false;
@@ -96,9 +109,15 @@ public:
         return true;
     }
 
-    bool format(const Config& config)
+    bool format(const MyLoggerConfig& config)
     {
-        Header header;
+        MyLoggerHeader header;
+
+        if (config.keySize == 0 || config.keySize > MAX_KEY_SIZE)
+            return false;
+
+        if (config.valueSize == 0 || config.valueSize > MAX_VALUE_SIZE)
+            return false;
 
         if (!_flash)
             return false;
@@ -117,11 +136,46 @@ public:
         return true;
     }
 
-    bool getConfig(Config* config)
+    bool getConfig(MyLoggerConfig* config)
     {
         if (!_initialized)
             return false;
         memcpy(config, &_config, sizeof(_config));
         return true;
     }
+
+
+    bool appendLog(const LogEntry& entry)
+    {
+        return true;
+    }
+
+    LogPosition getFirstLogPosition()
+    {
+        return LogPosition();
+    }
+    
+
+
+    // 
+    //bool readLogEntry(const LogPosition& position, LogEntry& entry)
+    //{
+    //    return false;
+    //}
+
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
